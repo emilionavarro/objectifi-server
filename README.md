@@ -1,3 +1,6 @@
+
+To run mongo manually mongod --config /usr/local/etc/mongod.conf
+
 # Node REST API
 
 [![CI Status](http://img.shields.io/travis/ealeksandrov/NodeAPI.svg)](https://travis-ci.org/ealeksandrov/NodeAPI)

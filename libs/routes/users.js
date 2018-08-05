@@ -4,6 +4,10 @@ var router = express.Router();
 
 var libs = process.cwd() + '/libs/';
 
+var log = require(libs + 'log')(module);
+var User = require(libs + 'model/user');
+var Client = require(libs + 'model/client');
+
 var db = require(libs + 'db/mongoose');
 
 router.get('/info', passport.authenticate('bearer', { session: false }),
@@ -19,5 +23,23 @@ router.get('/info', passport.authenticate('bearer', { session: false }),
         });
     }
 );
+
+router.post('/signup', function (req, res) {
+    var user = new User({
+        username: req.body.username,
+        password: req.body.password
+    });
+
+    //check for users before doing this
+
+    user.save(function (err, user) {
+        if (!err) {
+            log.info('New user - %s:%s', user.username, user.password);
+        } else {
+            log.error(err);
+            return res.json(err.errmsg);
+        }
+    });
+})
 
 module.exports = router;

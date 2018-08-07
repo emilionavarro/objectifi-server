@@ -19,4 +19,21 @@ var UserStorage = new Schema({
 //     return true;
 // });
 
+UserStorage.methods.checkSubArrays = function () {
+    var forceSave = false;
+
+    if (this.subscriptions === null || this.subscriptions === undefined) {
+        this.subscriptions = [];
+        forceSave = true;
+    }
+
+    if (forceSave) {
+        this.save(function (err) {
+            if (err) {
+                log.error('Internal error(%d): %s', 500, err.message);
+            }
+        });
+    }
+};
+
 module.exports = mongoose.model('UserStorage', UserStorage);

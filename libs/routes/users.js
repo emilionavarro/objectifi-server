@@ -36,6 +36,11 @@ router.post('/signup', function (req, res) {
     user.save(function (err, user) {
         if (!err) {
             log.info('New user - %s:%s', user.username, user.password);
+
+            res.statusCode = 200;
+            return res.json({
+                status: "User created. Please login"
+            });
         } else {
             log.error(err);
             return res.json(err.errmsg);
@@ -94,7 +99,7 @@ router.post('/storage', passport.authenticate('bearer', { session: false }), fun
 
 router.get('/storage', passport.authenticate('bearer', { session: false }), function (req, res) {
 
-    UserStorage.findOne( { owner: req.user.username }, { _id:0, __v:0 }, function (err, userStorage) {
+    UserStorage.findOne( { owner: req.user.username }, { }, function (err, userStorage) {
         if (!userStorage) {
             res.statusCode = 404;
 
@@ -104,6 +109,8 @@ router.get('/storage', passport.authenticate('bearer', { session: false }), func
         }
 
         if (!err) {
+            userStorage.checkSubArrays();
+
             return res.json({
                 status: 'OK',
                 userStorage: userStorage
